@@ -1,0 +1,57 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Grimora Store</title>
+<style>
+body{margin:0;background:#0b0b12;color:#eee;font-family:Arial,sans-serif}
+header{text-align:center;padding:28px 15px;background:#151522;border-bottom:1px solid #34344b}
+h1{letter-spacing:4px;margin:0;color:#a99bff}
+main{max-width:500px;margin:24px auto;padding:16px}
+.card{background:#171722;padding:20px;border-radius:14px;border:1px solid #303044}
+label{display:block;margin:14px 0 7px}
+input,select{box-sizing:border-box;width:100%;padding:12px;border-radius:8px;border:1px solid #45455a;background:#0d0d16;color:white}
+button{width:100%;padding:13px;margin-top:20px;background:#a99bff;color:#111;font-weight:bold;border:0;border-radius:8px}
+.note{font-size:12px;color:#aaa;line-height:1.6}
+</style>
+</head>
+<body>
+<header>
+<h1>GRIMORA</h1>
+<p>ORDER PANEL</p>
+</header>
+<main>
+<div class="card">
+<h2>Pesan Layanan</h2>
+<label>Pilih layanan</label>
+<select id="service">
+<option value="">-- Pilih layanan --</option>
+<option>Followers</option>
+<option>Likes</option>
+<option>Views</option>
+</select>
+<label>Link / Target</label>
+<input id="target" placeholder="Masukkan link target">
+<label>Jumlah</label>
+<input id="qty" type="number" min="1" placeholder="Masukkan jumlah">
+<p class="note">Periksa target dan jumlah sebelum melanjutkan pesanan.</p>
+<button onclick="order()">Buat Pesanan</button>
+<p id="result" class="note"></p>
+</div>
+</main>
+<script>
+function order(){
+const s=document.getElementById('service').value;
+const t=document.getElementById('target').value.trim();
+const q=Number(document.getElementById('qty').value);
+if(!s||!t||!Number.isInteger(q)||q<1){
+document.getElementById('result').textContent='Lengkapi layanan, target, dan jumlah.';
+return;
+}
+document.getElementById('result').textContent='Tampilan demo: pesanan belum dikirim ke supplier. API dan pembayaran belum terhubung.';
+}
+</script>
+</body>
+</html>
