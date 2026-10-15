@@ -62,8 +62,8 @@ async function loadServices(){
     }
 
     const services = Array.isArray(result)
-      ? result
-      : result.data || result.services || [];
+  ? result
+  : result.services || result.data || [];
 
     if (!services.length) {
       throw new Error("Daftar layanan tidak ditemukan");
