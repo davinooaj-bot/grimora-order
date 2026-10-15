@@ -22,36 +22,96 @@ button{width:100%;padding:13px;margin-top:20px;background:#a99bff;color:#111;fon
 <h1>GRIMORA</h1>
 <p>ORDER PANEL</p>
 </header>
+
 <main>
 <div class="card">
 <h2>Pesan Layanan</h2>
+
 <label>Pilih layanan</label>
 <select id="service">
-<option value="">-- Pilih layanan --</option>
-<option>Followers</option>
-<option>Likes</option>
-<option>Views</option>
+<option value="">Memuat layanan...</option>
 </select>
+<p id="serviceInfo" class="note">Menghubungkan ke supplier...</p>
+
 <label>Link / Target</label>
 <input id="target" placeholder="Masukkan link target">
+
 <label>Jumlah</label>
 <input id="qty" type="number" min="1" placeholder="Masukkan jumlah">
-<p class="note">Periksa target dan jumlah sebelum melanjutkan pesanan.</p>
+
+<p class="note">Periksa link dan jumlah sebelum melanjutkan.</p>
 <button onclick="order()">Buat Pesanan</button>
 <p id="result" class="note"></p>
 </div>
 </main>
+
 <script>
+// GANTI dengan alamat Worker kamu, tanpa /api/services di belakang
+const API_URL = "TEMPEL_ALAMAT_WORKER_KAMU";
+
+async function loadServices(){
+  const select = document.getElementById("service");
+  const info = document.getElementById("serviceInfo");
+
+  try {
+    const response = await fetch(API_URL + "/api/services");
+    const result = await response.json();
+
+    if (!response.ok || result.error) {
+      throw new Error(result.error || "Gagal memuat layanan");
+    }
+
+    const services = Array.isArray(result)
+      ? result
+      : result.data || result.services || [];
+
+    if (!services.length) {
+      throw new Error("Daftar layanan tidak ditemukan");
+    }
+
+    select.innerHTML =
+      '<option value="">-- Pilih layanan --</option>';
+
+    services.forEach(item => {
+      const id = item.service ?? item.id;
+      const name = item.name ?? item.service_name ?? "Layanan";
+      if (id === undefined || id === null) return;
+
+      const option = document.createElement("option");
+      option.value = id;
+      option.textContent = name;
+      select.appendChild(option);
+    });
+
+    if (select.options.length <= 1) {
+      throw new Error("Format data layanan tidak sesuai");
+    }
+
+    info.textContent = "Layanan supplier berhasil dimuat.";
+  } catch (error) {
+    select.innerHTML =
+      '<option value="">Layanan gagal dimuat</option>';
+    info.textContent =
+      error.message + ". Periksa alamat Worker dan format respons API.";
+  }
+}
+
 function order(){
-const s=document.getElementById('service').value;
-const t=document.getElementById('target').value.trim();
-const q=Number(document.getElementById('qty').value);
-if(!s||!t||!Number.isInteger(q)||q<1){
-document.getElementById('result').textContent='Lengkapi layanan, target, dan jumlah.';
-return;
+  const service = document.getElementById("service").value;
+  const target = document.getElementById("target").value.trim();
+  const qty = Number(document.getElementById("qty").value);
+  const result = document.getElementById("result");
+
+  if(!service || !target || !Number.isInteger(qty) || qty < 1){
+    result.textContent = "Lengkapi layanan, target, dan jumlah.";
+    return;
+  }
+
+  result.textContent =
+    "Demo: layanan berhasil dipilih, tetapi pesanan belum dikirim. Sistem harga dan pembayaran perlu disiapkan terlebih dahulu.";
 }
-document.getElementById('result').textContent='Tampilan demo: pesanan belum dikirim ke supplier. API dan pembayaran belum terhubung.';
-}
+
+loadServices();
 </script>
 </body>
 </html>
