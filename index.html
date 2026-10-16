@@ -79,7 +79,11 @@ async function loadServices(){
 
       const option = document.createElement("option");
       option.value = id;
-      option.textContent = name;
+      const modal = Number(item.price || 0);
+const hargaJual = modal * 2;
+
+option.textContent =
+  name + " — Rp" + hargaJual.toLocaleString("id-ID") + " / 1.000";
       select.appendChild(option);
     });
 
